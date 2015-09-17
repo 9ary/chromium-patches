@@ -1,0 +1,31 @@
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/contextmenu/ChromeContextMenuPopulator.java b/chrome/android/java/src/org/chromium/chrome/browser/contextmenu/ChromeContextMenuPopulator.java
+--- a/chrome/android/java/src/org/chromium/chrome/browser/contextmenu/ChromeContextMenuPopulator.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/contextmenu/ChromeContextMenuPopulator.java
+@@ -83,10 +83,24 @@ public class ChromeContextMenuPopulator implements ContextMenuPopulator {
+ 
+     @Override
+     public void buildContextMenu(ContextMenu menu, Context context, ContextMenuParams params) {
++        String headerText = "";
++        if (!TextUtils.isEmpty(params.getTitleText())) {
++            headerText += params.getTitleText();
++        }
+         if (!TextUtils.isEmpty(params.getLinkUrl()) && !params.getLinkUrl().equals(BLANK_URL)) {
+-            setHeaderText(context, menu, params.getLinkUrl());
+-        } else if (!TextUtils.isEmpty(params.getTitleText())) {
+-            setHeaderText(context, menu, params.getTitleText());
++            if (!TextUtils.isEmpty(headerText)) {
++                headerText += "\n";
++            }
++            headerText += "Link: " + params.getLinkUrl();
++        }
++        if (!TextUtils.isEmpty(params.getSrcUrl()) && !params.getSrcUrl().equals(BLANK_URL)) {
++            if (!TextUtils.isEmpty(headerText)) {
++                headerText += "\n";
++            }
++            headerText += "Source: " + params.getSrcUrl();
++        }
++        if (!TextUtils.isEmpty(headerText)) {
++            setHeaderText(context, menu, headerText);
+         }
+ 
+         if (mMenuInflater == null) mMenuInflater = new MenuInflater(context);
